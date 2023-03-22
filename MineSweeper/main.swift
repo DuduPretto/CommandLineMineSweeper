@@ -159,7 +159,7 @@ print("X: \(X), Y: \(Y)")
 
 
 
-func selectDifficulty() throws{
+func selectDifficulty(){
     print("""
     Escolha o numero correspondente a dificuldade em que deseja jogar:
         1 - Facil
@@ -169,19 +169,23 @@ func selectDifficulty() throws{
 
     if let difficultyChoice: String = readLine(){
         if let selectedDifficulty = Int(difficultyChoice){
-            dif = selectedDifficulty
+            if selectedDifficulty > 3 || selectedDifficulty <= 0{
+                print("O numero inserido e invalido, por favor, tente novamente")
+                selectDifficulty()
+            }else{
+                dif = selectedDifficulty
+
+            }
         }else{
-            throw InputErrors.ivalidInput
+            print("O valor inserido nao e um numero, por favor, tente novamente")
+            selectDifficulty()
         }
     }
+    
+    
 }
 
-do{
-    try selectDifficulty()
-}catch InputErrors.ivalidInput{
-    print("Ocorreu um erro com o input, por favor, tente novamente")
-}
-
+selectDifficulty()
 print("dificuldade selecionada = \(dif)")
 
 matrixGenerator()

@@ -32,7 +32,17 @@ class quadradoBase{
     var type: state = .undecided
     var symbol = "❔"
     
-    
+    func showSquare() {
+        if signaled{
+            print("⛳️")
+        }
+        else if revealed {
+            print(symbol)
+        }
+        else {
+            print("🟩")
+        }
+    }
 }
 
 //for linha in x-1...x+1
@@ -56,6 +66,7 @@ func revela(A:quadradoBase, x:Int, y:Int, field:[[quadradoBase]]){
             A.revealed = true;
             quadradosrevelados+=1;
             A.type = .free
+            A.symbol = "⬜️"
             for linha in x-1...x+1{
                 for coluna in y-1...y+1{
                     revela(A: field[linha][coluna], x: linha, y: coluna, field: field)

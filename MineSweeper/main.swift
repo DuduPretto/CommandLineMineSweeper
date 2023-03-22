@@ -54,42 +54,42 @@ class quadradoBase{
 }
 
 //for linha in x-1...x+1
-var A: quadradoBase = quadradoBase()
-var x = 4;
-var y = 3;
+//var A: quadradoBase = quadradoBase()
+//var x = 4;
+//var y = 3;
 
-func revela(A:quadradoBase, x:Int, y:Int, field:[[quadradoBase]]){
-    if (A.type == .bomb){
+func revela(x:Int, y:Int){
+    if (field[x][y].type == .bomb){
         print("Game Over! 💣🎇😵")
-        A.revealed = true
+        field[x][y].revealed = true
         gameEnd=true;
     }
-    if (A.type == .undecided){
+    if (field[x][y].type == .undecided){
         for linha in x-1...x+1{
             for coluna in y-1...y+1{
                 if((field[linha][coluna]).type == .bomb){
-                    A.surroundingBombs+=1;
+                    field[x][y].surroundingBombs+=1;
                 }
             }
         }
-        if(A.surroundingBombs == 0){
-            A.revealed = true;
+        if(field[x][y].surroundingBombs == 0){
+            field[x][y].revealed = true;
             quadradosrevelados+=1;
-            A.type = .free
-            A.symbol = "⬜️"
+            field[x][y].type = .free
+            field[x][y].symbol = "⬜️"
             for linha in x-1...x+1{
                 for coluna in y-1...y+1{
                     if(linha>=0 && linha<=X-1 && coluna>=0 && coluna<=Y-1){
-                        revela(A: field[linha][coluna], x: linha, y: coluna, field: field)
+                        revela(x: linha, y: coluna)
                     }
                 }
             }
         }
         else{
-            A.revealed = true;
+            field[x][y].revealed = true;
             quadradosrevelados+=1;
-            A.type = .danger
-            A.symbol = dangerSymbols[A.surroundingBombs]!//arrumar aqui
+            field[x][y].type = .danger
+            field[x][y].symbol = dangerSymbols[field[x][y].surroundingBombs]!//arrumar aqui
         }
     }
     showField()
@@ -264,14 +264,14 @@ while(gameEnd == false){
             }else{
                 currentX += 1
             }
-//        case "1":
-//
-//        
+        case "c":
+            revela(x: currentX, y: currentY)
+        case "x":
+            sinaliza(A: field[currentX][currentY])
         default:
             break
     }
 }
-revela(A: field[3][3], x: 3, y: 3, field: field)
 
 
 // Imrpimir o campo

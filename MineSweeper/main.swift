@@ -6,7 +6,7 @@
 //
 import Foundation
 
-var field = [[quadradoBase]]()
+var field: [[quadradoBase]] = []
 var totalDeBombas:Int = 6;
 var bombasSinalizadas:Int = 0;
 var totalDeQuadrados:Int = 16;
@@ -105,13 +105,27 @@ func matrixGenerator(){
         X = 24;
         Y = 18;
     }
-    for linha in 0...X {
-        for coluna in 0...Y{
-                field[linha][coluna] = quadradoBase()
+//    for linha in 0...X {
+//        for _ in 0...Y{
+//            field[linha].append(quadradoBase())
+//        }
+//    }
+    
+    for i in 0...X-1{
+        field.append([quadradoBase]())
+        for _ in 0...Y-1{
+            field[i].append(quadradoBase())
         }
     }
 }
 
+//var teste: [quadradoBase] = []
+//teste.append(quadradoBase())
+//teste[0].revealed = true
+//print(teste[0].showSquare())
+
+matrixGenerator()
+print(field[9][7].showSquare())
 
 // Imrpimir o campo
 // Implementar dificuldades

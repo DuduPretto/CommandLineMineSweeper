@@ -8,10 +8,12 @@ import Foundation
 
 var field: [[quadradoBase]] = []
 var totalDeBombas:Int = 6;
+var flagsUsadas = 0;
 var bombasSinalizadas:Int = 0;
 var totalDeQuadrados:Int = 16;
 var quadradosASerrevelados:Int = totalDeQuadrados - totalDeBombas;
 var quadradosrevelados:Int = 0;
+var gameEnd = false;
 var dif = 1
 var X = 0;
 var Y = 0;
@@ -58,6 +60,7 @@ func revela(A:quadradoBase, x:Int, y:Int, field:[[quadradoBase]]){
     if (A.type == .bomb){
         print("Game Over! 💣🎇😵")
         A.revealed = true
+        gameEnd=true;
     }
     if (A.type == .undecided){
         for linha in x-1...x+1{
@@ -93,10 +96,24 @@ func revela(A:quadradoBase, x:Int, y:Int, field:[[quadradoBase]]){
 
 func sinaliza(A:quadradoBase){
     A.signaled = true;
-    if (A.type == .bomb){
-        bombasSinalizadas+=1;
-        if(bombasSinalizadas == totalDeBombas && quadradosrevelados == quadradosASerrevelados){
-            print("You Win!")
+    if(A.signaled == false){
+        if (flagsUsadas < totalDeBombas){
+            A.signaled = true;
+            flagsUsadas+=1;
+            if (A.type == .bomb){
+                bombasSinalizadas+=1;
+                if(bombasSinalizadas == totalDeBombas && quadradosrevelados == quadradosASerrevelados){
+                    print("You Win!")
+                    gameEnd=true;
+                }
+            }
+            else{
+                print("Todas as flags já foram utilizadas, por favor remova alguma para poder adicionar outra")
+            }
+        }
+        else{
+            A.signaled = false;
+            flagsUsadas-=1;
         }
     }
 }
@@ -193,6 +210,26 @@ matrixGenerator()
 bombSpreader()
 //showField()
 
+while(gameEnd == false){
+    print("Escolha o quarado (Letra),(Numero): ")
+    let selectedSquare = readLine()
+    print("O que quer fazer nesse quadrado? (1) Revelar (2) Sinalizar")
+    let choiceString = readLine()
+    // split de selectedSquare na virgula
+    var x = 1;
+    var y = 2;
+    if(choiceString == "1"){
+        
+    }
+    if(choiceString == "2"){
+        if(field[x][y].revealed == false){
+            
+        }
+        else{
+            print ("Voce nao pode sinalizar espacos já revelados, por favor realize alguma outa acao")
+        }
+    }
+}
 revela(A: field[3][3], x: 3, y: 3, field: field)
 
 

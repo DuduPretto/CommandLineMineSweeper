@@ -21,11 +21,14 @@ enum state{
     case bomb
 }
 
+let dangerSymbols = [1:"1️⃣", 2:"2️⃣", 3:"3️⃣", 4:"4️⃣", 5:"5️⃣", 6:"6️⃣", 7:"7️⃣", 8:"8️⃣"]
+
 class quadradoBase{
     var surroundingBombs = 0
     var signaled = false
     var revealed = false
     var type: state = .undecided
+    var symbol = "❔"
 }
 
 //for linha in x-1...x+1
@@ -59,6 +62,7 @@ func revela(A:quadradoBase, x:Int, y:Int, field:[[quadradoBase]]){
             A.revealed = true;
             quadradosrevelados+=1;
             A.type = .danger
+            A.symbol = dangerSymbols[A.surroundingBombs]!//arrumar aqui
         }
     }
 }

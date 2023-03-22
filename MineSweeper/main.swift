@@ -4,7 +4,6 @@
 //
 //  Created by Lucas Cunha on 13/03/23.
 //
-
 import Foundation
 
 var field = [[quadradoBase]]()
@@ -13,6 +12,9 @@ var bombasSinalizadas:Int = 0;
 var totalDeQuadrados:Int = 16;
 var quadradosASerrevelados:Int = totalDeQuadrados - totalDeBombas;
 var quadradosrevelados:Int = 0;
+var dif = 1;
+var X = 0;
+var Y = 0;
 
 enum state{
     case undecided
@@ -29,6 +31,8 @@ class quadradoBase{
     var revealed = false
     var type: state = .undecided
     var symbol = "❔"
+    
+    
 }
 
 //for linha in x-1...x+1
@@ -76,6 +80,28 @@ func sinaliza(A:quadradoBase){
         }
     }
 }
+
+func matrixGenerator(){
+    if (dif == 1){
+        X = 10;
+        Y = 8;
+    }
+    if (dif == 2){
+        X = 18;
+        Y = 14;
+    }
+    if (dif == 3){
+        X = 24;
+        Y = 18;
+    }
+    for linha in 0...X {
+        for coluna in 0...Y{
+                field[linha][coluna] = quadradoBase()
+        }
+    }
+}
+
+
 // Imrpimir o campo
 // Implementar dificuldades
 // Criar a lógica de game over (Feito)

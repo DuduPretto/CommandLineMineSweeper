@@ -17,6 +17,8 @@ var gameEnd = false;
 var dif = 1
 var X = 0;
 var Y = 0;
+var currentX = 0
+var currentY = 0
 
 enum state{
     case undecided
@@ -163,7 +165,11 @@ func bombSpreader(){
 func showField(){
     for i in 0...Y-1{
         for j in 0...X-1{
-            field[j][i].showSquare()
+            if i == currentY && j == currentX{
+                print("👇🏽", terminator: "")
+            }else{
+                field[j][i].showSquare()
+            }
         }
         print()
     }
@@ -211,23 +217,58 @@ bombSpreader()
 //showField()
 
 while(gameEnd == false){
-    print("Escolha o quarado (Letra),(Numero): ")
-    let selectedSquare = readLine()
-    print("O que quer fazer nesse quadrado? (1) Revelar (2) Sinalizar")
-    let choiceString = readLine()
+    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+    showField()
+    //print("Escolha o quarado (Letra),(Numero): ")
+    //let selectedSquare = readLine()
+    //print("O que quer fazer nesse quadrado? (1) Revelar (2) Sinalizar")
+    //let choiceString = readLine()
     // split de selectedSquare na virgula
-    var x = 1;
-    var y = 2;
-    if(choiceString == "1"){
-        
-    }
-    if(choiceString == "2"){
-        if(field[x][y].revealed == false){
-            
-        }
-        else{
-            print ("Voce nao pode sinalizar espacos já revelados, por favor realize alguma outa acao")
-        }
+    //var x = 1;
+//    var y = 2;
+//    if(choiceString == "1"){
+//
+//    }
+//    if(choiceString == "2"){
+//        if(field[x][y].revealed == false){
+//
+//        }
+//        else{
+//            print ("Voce nao pode sinalizar espacos já revelados, por favor realize alguma outa acao")
+//        }
+//    }
+    let comando = Character(UnicodeScalar(Int(getch()))!)
+    
+    switch comando{
+        case "w":
+            if currentY == 0{
+                currentY = Y-1
+            }else{
+                currentY -= 1
+            }
+        case "a":
+            if currentX == 0{
+                currentX = X-1
+            }else{
+                currentX -= 1
+            }
+        case "s":
+            if currentY == Y-1{
+                currentY = 0
+            }else{
+                currentY += 1
+            }
+        case "d":
+            if currentX == X-1{
+                currentX = 0
+            }else{
+                currentX += 1
+            }
+//        case "1":
+//
+//        
+        default:
+            break
     }
 }
 revela(A: field[3][3], x: 3, y: 3, field: field)
@@ -247,3 +288,30 @@ revela(A: field[3][3], x: 3, y: 3, field: field)
 //Completo: Testado
 
 //trocar matrix generator para um switch com o default para repetir o input
+
+extension FileHandle {
+    func enableRawMode() -> termios {
+        var raw = termios()
+        tcgetattr(self.fileDescriptor, &raw)
+
+        let original = raw
+        raw.c_lflag &= ~UInt(ECHO | ICANON)
+        tcsetattr(self.fileDescriptor, TCSADRAIN, &raw)
+        return original
+    }
+
+    func restoreRawMode(originalTerm: termios) {
+        var term = originalTerm
+        tcsetattr(self.fileDescriptor, TCSADRAIN, &term)
+    }
+}
+
+func getch() -> UInt8 {
+    let handle = FileHandle.standardInput
+    let term = handle.enableRawMode()
+    defer { handle.restoreRawMode(originalTerm: term) }
+
+    var byte: UInt8 = 0
+    read(handle.fileDescriptor, &byte, 1)
+    return byte
+}

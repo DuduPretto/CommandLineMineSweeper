@@ -96,14 +96,20 @@ func matrixGenerator(){
     if (dif == 1){
         X = 10;
         Y = 8;
+        totalDeBombas = 14;
+        totalDeQuadrados = X * Y;
     }
     if (dif == 2){
         X = 18;
         Y = 14;
+        totalDeBombas = 22;
+        totalDeQuadrados = X * Y;
     }
     if (dif == 3){
         X = 24;
         Y = 18;
+        totalDeBombas = 28;
+        totalDeQuadrados = X * Y;
     }
 //    for linha in 0...X {
 //        for _ in 0...Y{
@@ -115,6 +121,18 @@ func matrixGenerator(){
         field.append([quadradoBase]())
         for _ in 0...Y-1{
             field[i].append(quadradoBase())
+        }
+    }
+}
+
+func bombSpreader(){
+    var aux = 0;
+    while(aux != totalDeBombas){
+        var randX = Int.random(in: 0..<X);
+        var randY = Int.random(in: 0..<Y);
+        if(field[randX][randY].type != .bomb){
+            field[randX][randY].type = .bomb;
+            aux+=1;
         }
     }
 }

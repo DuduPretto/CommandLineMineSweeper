@@ -115,7 +115,6 @@ func reveal(x:Int, y:Int){
             }
             else{
                 field[x][y].revealed = true;
-                playRevela()
                 revealedSquares+=1;
                 field[x][y].type = .danger
                 field[x][y].symbol = dangerSymbols[field[x][y].surroundingBombs]!
@@ -166,7 +165,7 @@ func matrixGenerator(){
     if (dif == 3){
         Width = 24;
         Height = 18;
-        totalBombs = 99;
+        totalBombs = 60;
         totalSquares = Width * Height;
         SquaresToBeRevealed = totalSquares - totalBombs
     }
@@ -259,10 +258,10 @@ matrixGenerator()
 
 bombSpreader()
 
-playBackground()
+//playBackground()
 
 while(gameEnd == false){
-    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
     showField()
     
     print("Quadrados revelados: \(revealedSquares), Quadrados a ser revelados \(SquaresToBeRevealed)")
@@ -296,6 +295,7 @@ while(gameEnd == false){
             }
         case "c":
             reveal(x: currentX, y: currentY)
+            playRevela()
         case "x":
             sinaliza(A: field[currentX][currentY])
         default:
@@ -342,7 +342,7 @@ func playBombSound() {
     if let url = Bundle.main.url(forResource: "Bomb", withExtension: "mp3"){
         player = try? AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
         player.play()
-        Thread.sleep(forTimeInterval: 1)
+        Thread.sleep(forTimeInterval: 1.5)
 //        playBackground()
     }
 }
@@ -373,10 +373,10 @@ func playGameOver() {
 }
 
 func playRevela() {
-    if let url = Bundle.main.url(forResource: "reveal", withExtension: "mp3"){
+    if let url = Bundle.main.url(forResource: "Reveal", withExtension: "mp3"){
         player = try? AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
         player.play()
-        Thread.sleep(forTimeInterval: 2)
+//        Thread.sleep(forTimeInterval: 2)
 //        playBackground()
     }
 }

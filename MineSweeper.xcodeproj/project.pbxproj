@@ -12,8 +12,8 @@
 		6C23CCC129CCC39300696F34 /* revela.mp3 in Headers */ = {isa = PBXBuildFile; fileRef = 6C23CCBA29CCC25300696F34 /* revela.mp3 */; settings = {ATTRIBUTES = (Public, ); }; };
 		6C23CCC429CCC39C00696F34 /* Bomb.mp3 in Headers */ = {isa = PBXBuildFile; fileRef = 6C23CCBD29CCC25300696F34 /* Bomb.mp3 */; settings = {ATTRIBUTES = (Public, ); }; };
 		6C23CCC529CCC39E00696F34 /* Background.mp3 in Headers */ = {isa = PBXBuildFile; fileRef = 6C23CCBC29CCC25300696F34 /* Background.mp3 */; settings = {ATTRIBUTES = (Public, ); }; };
-		6C23CCC729CCD04900696F34 /* Flag.mp3 in Headers */ = {isa = PBXBuildFile; fileRef = 6C23CCC629CCD02E00696F34 /* Flag.mp3 */; settings = {ATTRIBUTES = (Public, ); }; };
-		6C23CCC929CCD0A500696F34 /* GameOver.mp3 in Headers */ = {isa = PBXBuildFile; fileRef = 6C23CCC829CCD09F00696F34 /* GameOver.mp3 */; settings = {ATTRIBUTES = (Public, ); }; };
+		6C23CCCC29CCD86D00696F34 /* Flag.mp3 in Headers */ = {isa = PBXBuildFile; fileRef = 6C23CCCA29CCD85900696F34 /* Flag.mp3 */; settings = {ATTRIBUTES = (Public, ); }; };
+		6C23CCCD29CCD86F00696F34 /* GameOver.mp3 in Headers */ = {isa = PBXBuildFile; fileRef = 6C23CCCB29CCD86500696F34 /* GameOver.mp3 */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,8 +35,8 @@
 		6C23CCBB29CCC25300696F34 /* vitoria.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = vitoria.mp3; path = ../../../../Downloads/vitoria.mp3; sourceTree = "<group>"; };
 		6C23CCBC29CCC25300696F34 /* Background.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = Background.mp3; path = ../../../../Downloads/Background.mp3; sourceTree = "<group>"; };
 		6C23CCBD29CCC25300696F34 /* Bomb.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = Bomb.mp3; path = ../../../../Downloads/Bomb.mp3; sourceTree = "<group>"; };
-		6C23CCC629CCD02E00696F34 /* Flag.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = Flag.mp3; path = ../../../Pitch/Flag.mp3; sourceTree = "<group>"; };
-		6C23CCC829CCD09F00696F34 /* GameOver.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = GameOver.mp3; path = ../../../GameOver.mp3; sourceTree = "<group>"; };
+		6C23CCCA29CCD85900696F34 /* Flag.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = Flag.mp3; path = ../../../mp3/Flag.mp3; sourceTree = "<group>"; };
+		6C23CCCB29CCD86500696F34 /* GameOver.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = GameOver.mp3; path = ../../../mp3/GameOver.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,8 +74,8 @@
 				6C23CCBD29CCC25300696F34 /* Bomb.mp3 */,
 				6C23CCBA29CCC25300696F34 /* revela.mp3 */,
 				6C23CCBB29CCC25300696F34 /* vitoria.mp3 */,
-				6C23CCC629CCD02E00696F34 /* Flag.mp3 */,
-				6C23CCC829CCD09F00696F34 /* GameOver.mp3 */,
+				6C23CCCA29CCD85900696F34 /* Flag.mp3 */,
+				6C23CCCB29CCD86500696F34 /* GameOver.mp3 */,
 			);
 			path = MineSweeper;
 			sourceTree = "<group>";
@@ -89,8 +89,8 @@
 			files = (
 				6C23CCC029CCC39100696F34 /* vitoria.mp3 in Headers */,
 				6C23CCC129CCC39300696F34 /* revela.mp3 in Headers */,
-				6C23CCC729CCD04900696F34 /* Flag.mp3 in Headers */,
-				6C23CCC929CCD0A500696F34 /* GameOver.mp3 in Headers */,
+				6C23CCCD29CCD86F00696F34 /* GameOver.mp3 in Headers */,
+				6C23CCCC29CCD86D00696F34 /* Flag.mp3 in Headers */,
 				6C23CCC429CCC39C00696F34 /* Bomb.mp3 in Headers */,
 				6C23CCC529CCC39E00696F34 /* Background.mp3 in Headers */,
 			);

@@ -7,67 +7,25 @@
 import Foundation
 import AVFoundation
 
-var player: AVAudioPlayer!
 
-func playBombSound() {
-    if let url = Bundle.main.url(forResource: "Bomb", withExtension: "mp3"){
-        player = try? AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
-        player.play()
-    }
-}
+// MARK: - criação das variáveis
 
-func playBackground() {
-    if let url = Bundle.main.url(forResource: "Background", withExtension: "mp3"){
-        player = try? AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
-        player.play()
-       }
-}
-
-func playFlag() {
-    if let url = Bundle.main.url(forResource: "flag", withExtension: "mp3"){
-        player = try? AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
-        player.play()
-        Thread.sleep(forTimeInterval: 1)
-        playBackground()
-    }
-}
-
-func playGameOver() {
-    if let url = Bundle.main.url(forResource: "GameOver", withExtension: "mp3"){
-        player = try? AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
-        player.play()
-    }
-}
-
-func playRevela() {
-    if let url = Bundle.main.url(forResource: "revela", withExtension: "mp3"){
-        player = try? AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
-        player.play()
-    }
-}
-
-func playVitoria() {
-    if let url = Bundle.main.url(forResource: "vitoria", withExtension: "mp3"){
-        player = try? AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
-        player.play()
-    }
-}
-
-
-
-var field: [[quadradoBase]] = []
+var field: [[BaseSquare]] = []
 var totalBombs:Int = 0;
 var usefFlags = 0;
 var markedBombs:Int = 0;
-var totalDeQuadrados:Int = 0;
-var quadradosASerrevelados:Int = totalDeQuadrados - totalBombs;
-var quadradosRevelados:Int = 0;
+var totalSquares:Int = 0;
+var SquaresToBeRevealed:Int = totalSquares - totalBombs;
+var revealedSquares:Int = 0;
 var gameEnd = false;
 var dif = 1
-var X = 0;
-var Y = 0;
+var Width = 0;
+var Height = 0;
 var currentX = 0
 var currentY = 0
+let dangerSymbols = [1:"1️⃣", 2:"2️⃣", 3:"3️⃣", 4:"4️⃣", 5:"5️⃣", 6:"6️⃣", 7:"7️⃣", 8:"8️⃣"]
+
+// MARK: - estados de cada quadrado
 
 enum state{
     case undecided
@@ -76,13 +34,16 @@ enum state{
     case bomb
 }
 
+// MARK: - enum de erros
+
 enum InputErrors: Error{
     case invalidInput
 }
 
-let dangerSymbols = [1:"1️⃣", 2:"2️⃣", 3:"3️⃣", 4:"4️⃣", 5:"5️⃣", 6:"6️⃣", 7:"7️⃣", 8:"8️⃣"]
 
-class quadradoBase{
+// MARK: - classe do quadrado base
+
+class BaseSquare{
     var surroundingBombs = 0
     var signaled = false
     var revealed = false
@@ -102,12 +63,17 @@ class quadradoBase{
     }
 }
 
+// MARK: - condicao para fim do jogo
+
 func gameOver(){
-    if(markedBombs == totalBombs && quadradosRevelados == quadradosASerrevelados){
+    if(markedBombs == totalBombs && revealedSquares == SquaresToBeRevealed){
         print("You Win!")
-        gameEnd=true;
+        playVitoria()
+        gameEnd=true
     }
 }
+
+// MARK: - revelar quadrados
 
 func revela(x:Int, y:Int){
     if (field[x][y].type == .bomb){
@@ -119,11 +85,11 @@ func revela(x:Int, y:Int){
         print("passou")
     }
     if (field[x][y].type == .undecided){
-        for linha in x-1...x+1{
-            if linha >= 0 && linha <= X-1{
-                for coluna in y-1...y+1{
-                    if coluna >= 0 && coluna <= Y-1{
-                        if((field[linha][coluna]).type == .bomb){ //aqui
+        for line in x-1...x+1{
+            if line >= 0 && line <= Width-1{
+                for column in y-1...y+1{
+                    if column >= 0 && column <= Height-1{
+                        if((field[line][column]).type == .bomb){ //aqui
                             field[x][y].surroundingBombs+=1;
                         }
                     }
@@ -133,15 +99,15 @@ func revela(x:Int, y:Int){
         if(field[x][y].surroundingBombs == 0){
             field[x][y].revealed = true;
             playRevela()
-            quadradosRevelados+=1;
+            revealedSquares+=1;
             field[x][y].type = .free
             field[x][y].symbol = "⬜️"
-            for linha in x-1...x+1{
-                if linha >= 0 && linha <= X{
-                    for coluna in y-1...y+1{
-                        if coluna >= 0 && coluna <= Y{
-                            if(linha>=0 && linha<=X-1 && coluna>=0 && coluna<=Y-1){
-                                revela(x: linha, y: coluna)
+            for line in x-1...x+1{
+                if line >= 0 && line <= Width{
+                    for column in y-1...y+1{
+                        if column >= 0 && column <= Height{
+                            if(line>=0 && line<=Width-1 && column>=0 && column<=Height-1){
+                                revela(x: line, y: column)
                             }
                         }
                     }
@@ -151,7 +117,7 @@ func revela(x:Int, y:Int){
         else{
             field[x][y].revealed = true;
             playRevela()
-            quadradosRevelados+=1;
+            revealedSquares+=1;
             field[x][y].type = .danger
             field[x][y].symbol = dangerSymbols[field[x][y].surroundingBombs]!
         }
@@ -160,7 +126,9 @@ func revela(x:Int, y:Int){
     print("\n\n")
 }
 
-func sinaliza(A:quadradoBase){
+// MARK: - sinalizar bombas (flag)
+
+func sinaliza(A:BaseSquare){
     if(A.signaled == false){
         if (usefFlags < totalBombs){
             A.signaled = true;
@@ -179,42 +147,46 @@ func sinaliza(A:quadradoBase){
         }
 }
 
+// MARK: - gerar matriz de acordo com a dificuldade escolhida
+
 func matrixGenerator(){
     if (dif == 1){
-        X = 10;
-        Y = 8;
+        Width = 10;
+        Height = 8;
         totalBombs = 14;
-        totalDeQuadrados = X * Y;
-        quadradosASerrevelados = totalDeQuadrados - totalBombs
+        totalSquares = Width * Height;
+        SquaresToBeRevealed = totalSquares - totalBombs
     }
     if (dif == 2){
-        X = 18;
-        Y = 14;
+        Width = 18;
+        Height = 14;
         totalBombs = 40;
-        totalDeQuadrados = X * Y;
-        quadradosASerrevelados = totalDeQuadrados - totalBombs
+        totalSquares = Width * Height;
+        SquaresToBeRevealed = totalSquares - totalBombs
     }
     if (dif == 3){
-        X = 24;
-        Y = 18;
+        Width = 24;
+        Height = 18;
         totalBombs = 99;
-        totalDeQuadrados = X * Y;
-        quadradosASerrevelados = totalDeQuadrados - totalBombs
+        totalSquares = Width * Height;
+        SquaresToBeRevealed = totalSquares - totalBombs
     }
     
-    for i in 0...X-1{
-        field.append([quadradoBase]())
-        for _ in 0...Y-1{
-            field[i].append(quadradoBase())
+    for i in 0...Width-1{
+        field.append([BaseSquare]())
+        for _ in 0...Height-1{
+            field[i].append(BaseSquare())
         }
     }
 }
 
+// MARK: - geração de bombas
+
 func bombSpreader(){
     var aux = 0;
     while(aux != totalBombs){
-        let randX = Int.random(in: 0..<X-1);
-        let randY = Int.random(in: 0..<Y-1);
+        let randX = Int.random(in: 0..<Width-1);
+        let randY = Int.random(in: 0..<Height-1);
         if(field[randX][randY].type != .bomb){
             field[randX][randY].type = .bomb;
             field[randX][randY].symbol = "💣"
@@ -224,9 +196,12 @@ func bombSpreader(){
     }
 }
 
+// MARK: - imprimir campo
+
+
 func showField(){
-    for i in 0...Y-1{
-        for j in 0...X-1{
+    for i in 0...Height-1{
+        for j in 0...Width-1{
             if i == currentY && j == currentX{
                 print("👇🏽", terminator: "")
             }else{
@@ -239,9 +214,10 @@ func showField(){
 
 
 
-print("X: \(X), Y: \(Y)")
+//print("Width: \(Width), Height: \(Height)")
 
 
+// MARK: - escolha dificuldade
 
 func selectDifficulty() throws{
     print("""
@@ -275,6 +251,7 @@ func teste(){
     }
 }
 
+// MARK: - Main
 
 teste()
 print("dificuldade selecionada = \(dif)")
@@ -286,31 +263,31 @@ bombSpreader()
 playBackground()
 
 while(gameEnd == false){
-    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
     showField()
     let comando = Character(UnicodeScalar(Int(getch()))!)
     
     switch comando{
         case "w":
             if currentY == 0{
-                currentY = Y-1
+                currentY = Height-1
             }else{
                 currentY -= 1
             }
         case "a":
             if currentX == 0{
-                currentX = X-1
+                currentX = Width-1
             }else{
                 currentX -= 1
             }
         case "s":
-            if currentY == Y-1{
+            if currentY == Height-1{
                 currentY = 0
             }else{
                 currentY += 1
             }
         case "d":
-            if currentX == X-1{
+            if currentX == Width-1{
                 currentX = 0
             }else{
                 currentX += 1
@@ -322,14 +299,16 @@ while(gameEnd == false){
         default:
             break
     }
-    print("Quadrados revelados: \(quadradosRevelados), Quadrados a ser revelados \(quadradosASerrevelados)")
-    print("Total de bombas: \(totalBombs), bombas sinalizadas \(markedBombs)")
+    print("Quadrados revelados: \(revealedSquares), Quadrados a ser revelados \(SquaresToBeRevealed)")
+    print("Total de bombas: \(totalBombs), casas sinalizadas \(markedBombs)")
     gameOver()
     }
 playGameOver()
 Thread.sleep(forTimeInterval: 3)
 
 
+
+// MARK: - funções para usar teclado automaticamente
 
 extension FileHandle {
     func enableRawMode() -> termios {
@@ -357,3 +336,60 @@ func getch() -> UInt8 {
     read(handle.fileDescriptor, &byte, 1)
     return byte
 }
+
+// MARK: - funções de audio
+var player: AVAudioPlayer!
+
+func playBombSound() {
+    if let url = Bundle.main.url(forResource: "Bomb", withExtension: "mp3"){
+        player = try? AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
+        player.play()
+        Thread.sleep(forTimeInterval: 1)
+        playBackground()
+    }
+}
+
+func playBackground() {
+    if let url = Bundle.main.url(forResource: "Background", withExtension: "mp3"){
+        player = try? AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
+        player.play()
+       }
+}
+
+func playFlag() {
+    if let url = Bundle.main.url(forResource: "flag", withExtension: "mp3"){
+        player = try? AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
+        player.play()
+        Thread.sleep(forTimeInterval: 1)
+        playBackground()
+    }
+}
+
+func playGameOver() {
+    if let url = Bundle.main.url(forResource: "GameOver", withExtension: "mp3"){
+        player = try? AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
+        player.play()
+        Thread.sleep(forTimeInterval: 1)
+        playBackground()
+    }
+}
+
+func playRevela() {
+    if let url = Bundle.main.url(forResource: "revela", withExtension: "mp3"){
+        player = try? AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
+        player.play()
+        Thread.sleep(forTimeInterval: 1)
+        playBackground()
+    }
+}
+
+func playVitoria() {
+    if let url = Bundle.main.url(forResource: "vitoria", withExtension: "mp3"){
+        player = try? AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
+        player.play()
+        Thread.sleep(forTimeInterval: 1)
+        playBackground()
+    }
+}
+
+

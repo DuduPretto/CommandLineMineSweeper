@@ -7,12 +7,12 @@
 import Foundation
 
 var field: [[quadradoBase]] = []
-var totalDeBombas:Int = 6;
+var totalDeBombas:Int = 0;
 var flagsUsadas = 0;
 var bombasSinalizadas:Int = 0;
-var totalDeQuadrados:Int = 16;
+var totalDeQuadrados:Int = 0;
 var quadradosASerrevelados:Int = totalDeQuadrados - totalDeBombas;
-var quadradosrevelados:Int = 0;
+var quadradosRevelados:Int = 0;
 var gameEnd = false;
 var dif = 1
 var X = 0;
@@ -53,10 +53,12 @@ class quadradoBase{
     }
 }
 
-//for linha in x-1...x+1
-//var A: quadradoBase = quadradoBase()
-//var x = 4;
-//var y = 3;
+func gameOver(){
+    if(bombasSinalizadas == totalDeBombas && quadradosRevelados == quadradosASerrevelados){
+        print("You Win!")
+        gameEnd=true;
+    }
+}
 
 func revela(x:Int, y:Int){
     if (field[x][y].type == .bomb){
@@ -65,59 +67,62 @@ func revela(x:Int, y:Int){
         gameEnd=true;
     }
     if (field[x][y].type == .undecided){
+        
         for linha in x-1...x+1{
-            for coluna in y-1...y+1{
-                if((field[linha][coluna]).type == .bomb){
-                    field[x][y].surroundingBombs+=1;
+            if linha >= 0 && linha <= X-1{
+                for coluna in y-1...y+1{
+                    if coluna >= 0 && coluna <= Y-1{
+                        if((field[linha][coluna]).type == .bomb){ //aqui
+                            field[x][y].surroundingBombs+=1;
+                        }
+                    }
                 }
             }
         }
         if(field[x][y].surroundingBombs == 0){
             field[x][y].revealed = true;
-            quadradosrevelados+=1;
+            quadradosRevelados+=1;
             field[x][y].type = .free
             field[x][y].symbol = "⬜️"
             for linha in x-1...x+1{
-                for coluna in y-1...y+1{
-                    if(linha>=0 && linha<=X-1 && coluna>=0 && coluna<=Y-1){
-                        revela(x: linha, y: coluna)
+                if linha >= 0 && linha <= X{
+                    for coluna in y-1...y+1{
+                        if coluna >= 0 && coluna <= Y{
+                            if(linha>=0 && linha<=X-1 && coluna>=0 && coluna<=Y-1){
+                                revela(x: linha, y: coluna)
+                            }
+                        }
                     }
                 }
             }
         }
         else{
             field[x][y].revealed = true;
-            quadradosrevelados+=1;
+            quadradosRevelados+=1;
             field[x][y].type = .danger
             field[x][y].symbol = dangerSymbols[field[x][y].surroundingBombs]!//arrumar aqui
         }
     }
-    showField()
+    //showField()
     print("\n\n")
 }
 
 func sinaliza(A:quadradoBase){
-    A.signaled = true;
     if(A.signaled == false){
         if (flagsUsadas < totalDeBombas){
             A.signaled = true;
             flagsUsadas+=1;
             if (A.type == .bomb){
                 bombasSinalizadas+=1;
-                if(bombasSinalizadas == totalDeBombas && quadradosrevelados == quadradosASerrevelados){
-                    print("You Win!")
-                    gameEnd=true;
-                }
             }
             else{
                 print("Todas as flags já foram utilizadas, por favor remova alguma para poder adicionar outra")
             }
         }
-        else{
+        }else{
             A.signaled = false;
             flagsUsadas-=1;
         }
-    }
 }
 
 func matrixGenerator(){
@@ -126,18 +131,21 @@ func matrixGenerator(){
         Y = 8;
         totalDeBombas = 14;
         totalDeQuadrados = X * Y;
+        quadradosASerrevelados = totalDeQuadrados - totalDeBombas
     }
     if (dif == 2){
         X = 18;
         Y = 14;
         totalDeBombas = 40;
         totalDeQuadrados = X * Y;
+        quadradosASerrevelados = totalDeQuadrados - totalDeBombas
     }
     if (dif == 3){
         X = 24;
         Y = 18;
         totalDeBombas = 99;
         totalDeQuadrados = X * Y;
+        quadradosASerrevelados = totalDeQuadrados - totalDeBombas
     }
     
     for i in 0...X-1{
@@ -177,7 +185,6 @@ func showField(){
 
 
 
-//field[0][0].showSquare()
 print("X: \(X), Y: \(Y)")
 
 
@@ -214,29 +221,10 @@ print("dificuldade selecionada = \(dif)")
 matrixGenerator()
 
 bombSpreader()
-//showField()
 
 while(gameEnd == false){
     print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
     showField()
-    //print("Escolha o quarado (Letra),(Numero): ")
-    //let selectedSquare = readLine()
-    //print("O que quer fazer nesse quadrado? (1) Revelar (2) Sinalizar")
-    //let choiceString = readLine()
-    // split de selectedSquare na virgula
-    //var x = 1;
-//    var y = 2;
-//    if(choiceString == "1"){
-//
-//    }
-//    if(choiceString == "2"){
-//        if(field[x][y].revealed == false){
-//
-//        }
-//        else{
-//            print ("Voce nao pode sinalizar espacos já revelados, por favor realize alguma outa acao")
-//        }
-//    }
     let comando = Character(UnicodeScalar(Int(getch()))!)
     
     switch comando{
@@ -270,8 +258,12 @@ while(gameEnd == false){
             sinaliza(A: field[currentX][currentY])
         default:
             break
+        
     }
-}
+    print("Quadrados revelados: \(quadradosRevelados), Quadrados a ser revelados \(quadradosASerrevelados)")
+    print("Total de bombas: \(totalDeBombas), bombas sinalizadas \(bombasSinalizadas)")
+    gameOver()
+    }
 
 
 // Imrpimir o campo

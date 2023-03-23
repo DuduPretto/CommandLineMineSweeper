@@ -5,13 +5,62 @@
 //  Created by Lucas Cunha on 13/03/23.
 //
 import Foundation
+import AVFoundation
+
+var player: AVAudioPlayer!
+
+func playBombSound() {
+    if let url = Bundle.main.url(forResource: "Bomb", withExtension: "mp3"){
+        player = try? AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
+        player.play()
+    }
+}
+
+func playBackground() {
+    if let url = Bundle.main.url(forResource: "Background", withExtension: "mp3"){
+        player = try? AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
+        player.play()
+       }
+}
+
+func playFlag() {
+    if let url = Bundle.main.url(forResource: "flag", withExtension: "mp3"){
+        player = try? AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
+        player.play()
+        Thread.sleep(forTimeInterval: 1)
+        playBackground()
+    }
+}
+
+func playGameOver() {
+    if let url = Bundle.main.url(forResource: "GameOver", withExtension: "mp3"){
+        player = try? AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
+        player.play()
+    }
+}
+
+func playRevela() {
+    if let url = Bundle.main.url(forResource: "revela", withExtension: "mp3"){
+        player = try? AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
+        player.play()
+    }
+}
+
+func playVitoria() {
+    if let url = Bundle.main.url(forResource: "vitoria", withExtension: "mp3"){
+        player = try? AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
+        player.play()
+    }
+}
+
+
 
 var field: [[quadradoBase]] = []
-var totalDeBombas:Int = 0;
-var flagsUsadas = 0;
-var bombasSinalizadas:Int = 0;
+var totalBombs:Int = 0;
+var usefFlags = 0;
+var markedBombs:Int = 0;
 var totalDeQuadrados:Int = 0;
-var quadradosASerrevelados:Int = totalDeQuadrados - totalDeBombas;
+var quadradosASerrevelados:Int = totalDeQuadrados - totalBombs;
 var quadradosRevelados:Int = 0;
 var gameEnd = false;
 var dif = 1
@@ -28,7 +77,7 @@ enum state{
 }
 
 enum InputErrors: Error{
-    case ivalidInput
+    case invalidInput
 }
 
 let dangerSymbols = [1:"1️⃣", 2:"2️⃣", 3:"3️⃣", 4:"4️⃣", 5:"5️⃣", 6:"6️⃣", 7:"7️⃣", 8:"8️⃣"]
@@ -54,7 +103,7 @@ class quadradoBase{
 }
 
 func gameOver(){
-    if(bombasSinalizadas == totalDeBombas && quadradosRevelados == quadradosASerrevelados){
+    if(markedBombs == totalBombs && quadradosRevelados == quadradosASerrevelados){
         print("You Win!")
         gameEnd=true;
     }
@@ -65,9 +114,11 @@ func revela(x:Int, y:Int){
         print("Game Over! 💣🎇😵")
         field[x][y].revealed = true
         gameEnd=true;
+        playBombSound()
+        Thread.sleep(forTimeInterval: 5)
+        print("passou")
     }
     if (field[x][y].type == .undecided){
-        
         for linha in x-1...x+1{
             if linha >= 0 && linha <= X-1{
                 for coluna in y-1...y+1{
@@ -81,6 +132,7 @@ func revela(x:Int, y:Int){
         }
         if(field[x][y].surroundingBombs == 0){
             field[x][y].revealed = true;
+            playRevela()
             quadradosRevelados+=1;
             field[x][y].type = .free
             field[x][y].symbol = "⬜️"
@@ -98,9 +150,10 @@ func revela(x:Int, y:Int){
         }
         else{
             field[x][y].revealed = true;
+            playRevela()
             quadradosRevelados+=1;
             field[x][y].type = .danger
-            field[x][y].symbol = dangerSymbols[field[x][y].surroundingBombs]!//arrumar aqui
+            field[x][y].symbol = dangerSymbols[field[x][y].surroundingBombs]!
         }
     }
     //showField()
@@ -109,19 +162,20 @@ func revela(x:Int, y:Int){
 
 func sinaliza(A:quadradoBase){
     if(A.signaled == false){
-        if (flagsUsadas < totalDeBombas){
+        if (usefFlags < totalBombs){
             A.signaled = true;
-            flagsUsadas+=1;
+            usefFlags+=1;
             if (A.type == .bomb){
-                bombasSinalizadas+=1;
+                markedBombs+=1;
             }
             else{
                 print("Todas as flags já foram utilizadas, por favor remova alguma para poder adicionar outra")
             }
         }
+        playFlag()
         }else{
             A.signaled = false;
-            flagsUsadas-=1;
+            usefFlags-=1;
         }
 }
 
@@ -129,23 +183,23 @@ func matrixGenerator(){
     if (dif == 1){
         X = 10;
         Y = 8;
-        totalDeBombas = 14;
+        totalBombs = 14;
         totalDeQuadrados = X * Y;
-        quadradosASerrevelados = totalDeQuadrados - totalDeBombas
+        quadradosASerrevelados = totalDeQuadrados - totalBombs
     }
     if (dif == 2){
         X = 18;
         Y = 14;
-        totalDeBombas = 40;
+        totalBombs = 40;
         totalDeQuadrados = X * Y;
-        quadradosASerrevelados = totalDeQuadrados - totalDeBombas
+        quadradosASerrevelados = totalDeQuadrados - totalBombs
     }
     if (dif == 3){
         X = 24;
         Y = 18;
-        totalDeBombas = 99;
+        totalBombs = 99;
         totalDeQuadrados = X * Y;
-        quadradosASerrevelados = totalDeQuadrados - totalDeBombas
+        quadradosASerrevelados = totalDeQuadrados - totalBombs
     }
     
     for i in 0...X-1{
@@ -158,7 +212,7 @@ func matrixGenerator(){
 
 func bombSpreader(){
     var aux = 0;
-    while(aux != totalDeBombas){
+    while(aux != totalBombs){
         let randX = Int.random(in: 0..<X-1);
         let randY = Int.random(in: 0..<Y-1);
         if(field[randX][randY].type != .bomb){
@@ -189,7 +243,7 @@ print("X: \(X), Y: \(Y)")
 
 
 
-func selectDifficulty(){
+func selectDifficulty() throws{
     print("""
     Escolha o numero correspondente a dificuldade em que deseja jogar:
         1 - Facil
@@ -201,26 +255,35 @@ func selectDifficulty(){
         if let selectedDifficulty = Int(difficultyChoice){
             if selectedDifficulty > 3 || selectedDifficulty <= 0{
                 print("O numero inserido e invalido, por favor, tente novamente")
-                selectDifficulty()
+                throw InputErrors.invalidInput
             }else{
                 dif = selectedDifficulty
-
             }
         }else{
             print("O valor inserido nao e um numero, por favor, tente novamente")
-            selectDifficulty()
+            throw InputErrors.invalidInput
         }
     }
-    
-    
+}
+func teste(){
+    do{
+       try selectDifficulty()
+    }catch InputErrors.invalidInput{
+        teste()
+    }catch{
+        
+    }
 }
 
-selectDifficulty()
+
+teste()
 print("dificuldade selecionada = \(dif)")
 
 matrixGenerator()
 
 bombSpreader()
+
+playBackground()
 
 while(gameEnd == false){
     print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
@@ -258,28 +321,15 @@ while(gameEnd == false){
             sinaliza(A: field[currentX][currentY])
         default:
             break
-        
     }
     print("Quadrados revelados: \(quadradosRevelados), Quadrados a ser revelados \(quadradosASerrevelados)")
-    print("Total de bombas: \(totalDeBombas), bombas sinalizadas \(bombasSinalizadas)")
+    print("Total de bombas: \(totalBombs), bombas sinalizadas \(markedBombs)")
     gameOver()
     }
+playGameOver()
+Thread.sleep(forTimeInterval: 3)
 
 
-// Imrpimir o campo
-// Implementar dificuldades
-// Criar a lógica de game over (Feito)
-// Criar a lógica de ganhar o jogo (Feito)
-// Criar a lógica de revelar/sinalizar (Feito)
-// Geracao da matrix (Feito)
-// Criacao das bombas (Feito)
-// Refinamento da matrix (completar as informacoes com base nas posicoes das bombas) (Feito)
-// Input do usuário
-//
-//Feito: Implementado
-//Completo: Testado
-
-//trocar matrix generator para um switch com o default para repetir o input
 
 extension FileHandle {
     func enableRawMode() -> termios {

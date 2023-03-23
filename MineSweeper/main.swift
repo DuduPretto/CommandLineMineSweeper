@@ -188,7 +188,7 @@ func bombSpreader(){
         if(field[randX][randY].type != .bomb){
             field[randX][randY].type = .bomb;
             field[randX][randY].symbol = "💣"
-            field[randX][randY].revealed = true
+//            field[randX][randY].revealed = true
             aux+=1;
         }
     }
@@ -261,10 +261,16 @@ bombSpreader()
 //playBackground()
 
 while(gameEnd == false){
-    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+    
+    print("""
+Pressione "k" para sinalizar a casa atual com uma bandeira,
+ou "j" para revelar a mesma.
+
+""")
     showField()
     
-    print("Quadrados revelados: \(revealedSquares), Quadrados a ser revelados \(SquaresToBeRevealed)")
+    print("\nQuadrados revelados: \(revealedSquares), Quadrados a ser revelados \(SquaresToBeRevealed)")
     print("Total de bombas: \(totalBombs), casas sinalizadas \(usedFlags)")
     let comando = Character(UnicodeScalar(Int(getch()))!)
     
@@ -293,10 +299,10 @@ while(gameEnd == false){
             }else{
                 currentX += 1
             }
-        case "c":
+        case "j":
             reveal(x: currentX, y: currentY)
             playRevela()
-        case "x":
+        case "k":
             sinaliza(A: field[currentX][currentY])
         default:
             break

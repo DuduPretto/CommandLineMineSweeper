@@ -16,8 +16,8 @@ var usedFlags = 0;
 var markedBombs:Int = 0;
 var totalSquares:Int = 0;
 var SquaresToBeRevealed:Int = totalSquares - totalBombs;
-var revealedSquares:Int = 0;
-var gameEnd = false;
+var revealedSquares:Int = 0
+var gameEnd = false
 var dif = 1
 var Width = 0;
 var Height = 0;
@@ -151,7 +151,7 @@ func matrixGenerator(){
     if (dif == 1){
         Width = 10;
         Height = 8;
-        totalBombs = 14;
+        totalBombs = 10;
         totalSquares = Width * Height;
         SquaresToBeRevealed = totalSquares - totalBombs
     }
